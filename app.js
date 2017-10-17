@@ -9,6 +9,8 @@
 //Первый модуль - Контроллер Бюджета
 var budgetController = (function () {
 
+
+	//Конструктор дохода
 	var Income = function(id, description, value) {
 
 		this.id = id;
@@ -16,6 +18,7 @@ var budgetController = (function () {
 		this.value = value;
 	};
 
+	//Конструктор расхода
 	var Expense = function(id, description, value) {
 
 		this.id = id;
@@ -23,6 +26,8 @@ var budgetController = (function () {
 		this.value = value;
 	};
 
+
+	//Объект, в котором хранятся все данные
 	var data = {
 		allItems: {
 			inc: [],
@@ -79,7 +84,9 @@ var UIController = (function() {
 		inputType: '.add__type',
 		inputDesc: '.add__description',
 		inputValue: '.add__value',
-		inputBtn: '.add__btn'
+		inputBtn: '.add__btn',
+		incContainer: '.income__list',
+		expContainer: '.expenses__list'
 
 	};
 
@@ -94,6 +101,36 @@ var UIController = (function() {
 
 		getDOMStrings: function() {
 			return DOMStrings;
+		},
+
+		addListItem: function(obj, type) {
+
+			var html, newHtml, element;
+
+			if(type === 'inc') {
+
+				element = DOMStrings.incContainer;
+
+				html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+
+			} else if (type === 'exp') {
+
+				element = DOMStrings.expContainer;
+
+				html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+
+			}
+
+
+			newHtml = html.replace('%id%', obj.id);
+
+			newHtml = newHtml.replace('%description%', obj.description);
+
+			newHtml = newHtml.replace('%value%', obj.value);
+
+			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+
+
 		}
 
 	}
@@ -124,9 +161,25 @@ var controller = (function(budget, UI) {
 		var input, newItem;
 
 
+		//Получаем данные от пользователя
 		input = UI.getInput();
 
+		//Создаем объект(расход либо доход) на основе полученных от пользователя данных и добавляем его в контроллер бюджета
+
 		newItem = budget.addItem(input.type, input.description, input.value);
+
+		//Выводим полученные от пользователя данные в интерфейс
+
+		UI.addListItem(newItem, input.type);
+
+		//Подсчитываем бюджет
+
+
+		//Выводим бюджет в интрфейс
+
+
+
+
 
 		console.log(input);
 	};
